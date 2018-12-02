@@ -7,3 +7,9 @@
 *.rel
 *.rst
 *.sym
+
+PomodoroFirmware/Debug
+PomodoroFirmware/Release
+PomodoroFirmware/TAGS.txt
+PomodoroFirmware/TAGS_Filelist.txt
+
