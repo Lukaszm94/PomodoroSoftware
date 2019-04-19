@@ -1,6 +1,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm8l15x.h"
 #include "led_driver.h"
+#include "interrupt_manager.h"
+#include "pomodoro_timer.h"
 
 /** @addtogroup STM8L15x_StdPeriph_Template
   * @{
@@ -27,10 +29,10 @@ volatile uint32_t millis;
 		}
 }
 
-void configTIM2(void)
+void configTIM2(void) // 1ms timer
 {
 	CLK_PeripheralClockConfig(CLK_Peripheral_TIM2, ENABLE); // enable passing clock to TIM2 module
-	TIM2_TimeBaseInit(TIM2_Prescaler_1, TIM2_CounterMode_Up, 2000); // setup time-base
+	TIM2_TimeBaseInit(TIM2_Prescaler_1, TIM2_CounterMode_Up, 16000); // setup time-base
 	TIM2_ITConfig(TIM2_IT_Update, ENABLE); // setup interrupts
 	TIM2_Cmd(ENABLE);
 	enableInterrupts(); // global interrupts enable
@@ -86,6 +88,7 @@ void main(void)
 		GPIO_WriteBit(GPIOA, GPIO_Pin_3, RESET);
 		delay_ms(100);
 		//serialSendStringBlocking("Hello!\n\r");
+		PM_update();
   }
 }
 

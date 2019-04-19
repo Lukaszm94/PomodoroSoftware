@@ -3,13 +3,13 @@
 #include "stm8l15x_spi.h"
 #include "stm8l15x_gpio.h"
 #include "stm8l15x_dma.h"
+#include "config.h"
 
 #define LED_DOT_CORRECTION_BUFFER_SIZE (9+1)
 #define LED_PWM_BUFFER_SIZE (18+1)
 #define LED_PWM_CHANNELS 12
-#define PROGRESS_BAR_MAX_VALUE 1500
 #define PROGRESS_BAR_LEDS 10
-#define PROGRESS_PER_LED (PROGRESS_BAR_MAX_VALUE / PROGRESS_BAR_LEDS)
+#define PROGRESS_PER_LED (LED_BAR_PROGRESS_BAR_MAX_VALUE / PROGRESS_BAR_LEDS)
 #define PROGRESS_BAR_BUFFER_OFFSET 2
 #define PWM_MAX_VALUE 255
 
@@ -51,10 +51,10 @@ void led_setBarProgress(uint16_t progress) // progress: 0 to 1500
 {
 	uint8_t ledsFullyOn = 0;
 	uint16_t i, dimmedLedPwm;
-	if(progress > PROGRESS_BAR_MAX_VALUE) {
-		progress = PROGRESS_BAR_MAX_VALUE;
+	if(progress > LED_BAR_PROGRESS_BAR_MAX_VALUE) {
+		progress = LED_BAR_PROGRESS_BAR_MAX_VALUE;
 	}
-	ledsFullyOn = (progress * PROGRESS_BAR_LEDS) / PROGRESS_BAR_MAX_VALUE;
+	ledsFullyOn = (progress * PROGRESS_BAR_LEDS) / LED_BAR_PROGRESS_BAR_MAX_VALUE;
 	for(i = 0; i < ledsFullyOn; i++) {
 		led_pwmBuffer[i+PROGRESS_BAR_BUFFER_OFFSET] = PWM_MAX_VALUE;
 	}
