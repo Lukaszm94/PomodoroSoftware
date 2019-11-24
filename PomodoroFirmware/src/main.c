@@ -3,17 +3,21 @@
 #include "led_driver.h"
 #include "interrupt_manager.h"
 #include "pomodoro_timer.h"
+#include "config.h"
+#include "misc.h"
+#include "button.h"
 
 /** @addtogroup STM8L15x_StdPeriph_Template
   * @{
   */
-
+	
+#define LED_PWM_CHANNELS 12
 // global variables (used in main program flow and interrupts)
 volatile uint32_t millis;
+extern volatile uint16_t led_pwmBuffer[LED_PWM_CHANNELS];
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
-#define UART_BAUDRATE 57600
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
@@ -31,34 +35,14 @@ volatile uint32_t millis;
 
 void configTIM2(void) // 1ms timer
 {
+	millis = 0;
 	CLK_PeripheralClockConfig(CLK_Peripheral_TIM2, ENABLE); // enable passing clock to TIM2 module
-	TIM2_TimeBaseInit(TIM2_Prescaler_1, TIM2_CounterMode_Up, 16000); // setup time-base
+	// f_interrupt = f_clk / (prescaler * (period-1))
+	TIM2_TimeBaseInit(TIM2_Prescaler_16, TIM2_CounterMode_Up, 10000); // setup time-base, interrupt every 10ms
 	TIM2_ITConfig(TIM2_IT_Update, ENABLE); // setup interrupts
 	TIM2_Cmd(ENABLE);
 	enableInterrupts(); // global interrupts enable
 }
-
-/*void configUSART(void)
-{
-	CLK_PeripheralClockConfig(CLK_Peripheral_USART1, ENABLE);
-	USART_Init(USART1, UART_BAUDRATE, USART_WordLength_8b, USART_StopBits_1, USART_Parity_No, USART_Mode_Tx);
-	USART_Cmd(USART1, ENABLE);
-}
-
-void serialSendByteBlocking(uint8_t byte)
-{
-	while(USART_GetFlagStatus(USART1, USART_FLAG_TXE) != SET);
-	USART_SendData8(USART1, byte);
-}
-
-void serialSendStringBlocking(char *buffer)
-{
-	while(*buffer != 0x00) {
-		serialSendByteBlocking(*buffer);
-		buffer++;
-	}
-}*/
-
 
 /**
   * @brief  Main program.
@@ -68,27 +52,44 @@ void serialSendStringBlocking(char *buffer)
 void main(void)
 {
 	uint16_t progress = 0;
+	uint8_t i = 0;
 	CLK_SYSCLKDivConfig(CLK_SYSCLKDiv_1); // 16MHz
 	delay_ms(100);
-	GPIO_Init(GPIOA, GPIO_Pin_3, GPIO_Mode_Out_PP_Low_Slow);
-	//GPIO_Init(GPIOE, GPIO_Pin_7, GPIO_Mode_Out_PP_Low_Slow);
+	GPIO_Init(GPIOA, GREEN_LED_PIN, GPIO_Mode_Out_PP_Low_Slow);
+	GPIO_Init(GPIOE, DEBUG_1_CHANNEL_PIN, GPIO_Mode_Out_PP_Low_Slow);
+	GPIO_Init(GPIOE, DEBUG_2_CHANNEL_PIN, GPIO_Mode_Out_PP_Low_Slow);
+	GPIO_Init(GPIOE, DEBUG_3_CHANNEL_PIN, GPIO_Mode_Out_PP_Low_Slow);
 	configTIM2();
-	//configUSART();
+	configUSART();
+	configButton();
 	led_initDriver();
+	PM_init();
+	//led_setBarProgress(1500);
 	
 	//led_test();
-	
+	/*for(i = 1; i < LED_PWM_CHANNELS; i++) {
+		led_pwmBuffer[i] = 0x00;
+	}*/
   /* Infinite loop */
   while (1)
   {
-		led_setBarProgress(progress);
+		//led_setBarProgress(progress);
+		/*for(i = 1; i < LED_PWM_CHANNELS; i++) {
+			led_pwmBuffer[i] = 0x0FFF;
+			led_pwmBuffer[i-1] = 0x0000;
+			led_sendPwmBuffer();
+			delay_ms(5000);
+		}
+		led_pwmBuffer[LED_PWM_CHANNELS-1] = 0x0000;
+		led_pwmBuffer[0] = 0x0FFF;
+		led_sendPwmBuffer();
+		delay_ms(5000);*/
+		
 		progress = (progress+10) % 1500;
-		GPIO_WriteBit(GPIOA, GPIO_Pin_3, SET);
+		GPIO_WriteBit(GPIOA, GREEN_LED_PIN, SET);
 		delay_ms(100);
-		GPIO_WriteBit(GPIOA, GPIO_Pin_3, RESET);
+		GPIO_WriteBit(GPIOA, GREEN_LED_PIN, RESET);
 		delay_ms(100);
-		//serialSendStringBlocking("Hello!\n\r");
-		PM_update();
   }
 }
 

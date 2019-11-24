@@ -14,8 +14,8 @@
 #define PWM_MAX_VALUE 255
 
 extern volatile uint32_t millis;
-uint8_t led_buffer[LED_PWM_BUFFER_SIZE];
-uint16_t led_pwmBuffer[LED_PWM_CHANNELS];
+volatile uint8_t led_buffer[LED_PWM_BUFFER_SIZE];
+volatile uint16_t led_pwmBuffer[LED_PWM_CHANNELS];
 
 void led_convert2ChannelsInto3Bytes(uint16_t value1, uint16_t value2, uint8_t* buffer);
 void led_sendPwmBuffer(void);
@@ -70,17 +70,32 @@ void led_setBarProgress(uint16_t progress) // progress: 0 to 1500
 	led_sendPwmBuffer();
 }
 
+//FIXME: this function is accessing memory outside led_buffer!!! (overwrites millis value)
 void led_sendPwmBuffer(void)
 {
-	uint16_t i;
+	uint8_t i;
+	return;
 	led_buffer[0] = 0xC2;
 	for(i = 0; i < (LED_PWM_CHANNELS/2 + 1); i++) {
 		// channels order is reversed: PWM11, PWM10, PWM9, ... , PWM0
-		led_convert2ChannelsInto3Bytes(led_pwmBuffer[LED_PWM_CHANNELS - i*2 + 1], led_pwmBuffer[LED_PWM_CHANNELS - i*2], (led_buffer+1+3*i));
+		uint8_t index1 = LED_PWM_CHANNELS - i*2 - 1;
+		uint8_t index2 = LED_PWM_CHANNELS - i*2 - 2;
+		uint8_t* led_buffer_address = led_buffer+1+3*i;
+		led_convert2ChannelsInto3Bytes(led_pwmBuffer[index1], led_pwmBuffer[index2], led_buffer_address);
 	}
 	while(DMA_GetFlagStatus(DMA1_FLAG_BUSY2) == SET); // wait for previous DMA transfer to finish
 	DMA_Init(DMA1_Channel2, (uint32_t)led_buffer, (uint16_t)(&(SPI1->DR)), LED_PWM_BUFFER_SIZE, DMA_DIR_MemoryToPeripheral, DMA_Mode_Normal, DMA_MemoryIncMode_Inc, DMA_Priority_Low, DMA_MemoryDataSize_Byte);
 	DMA_Cmd(DMA1_Channel2, ENABLE);
+}
+
+void led_setModeLeds(uint16_t greenLedPwm, uint16_t redLedPwm)
+{
+	led_pwmBuffer[10] = redLedPwm;
+	led_pwmBuffer[11] = greenLedPwm;
+	
+	//led_pwmBuffer[10] = redLedPwm;
+	//led_pwmBuffer[11] = greenLedPwm;
+	led_sendPwmBuffer();
 }
 
 /*void led_test(void)

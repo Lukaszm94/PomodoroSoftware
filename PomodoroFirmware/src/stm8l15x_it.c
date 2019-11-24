@@ -27,7 +27,9 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm8l15x_it.h"
+#include "stm8l15x.h"
+#include "config.h"
+#include "interrupt_manager.h"
 
 /** @addtogroup STM8L15x_StdPeriph_Template
   * @{
@@ -288,16 +290,18 @@ INTERRUPT_HANDLER(ADC1_COMP_IRQHandler,18)
   * @param  None
   * @retval None
   */
-INTERRUPT_HANDLER(TIM2_UPD_OVF_TRG_BRK_USART2_TX_IRQHandler,19)
+	// https://community.st.com/s/question/0D50X00009XkWnPSAV/problem-compiling-in-stvd
+@svlreg INTERRUPT_HANDLER(TIM2_UPD_OVF_TRG_BRK_USART2_TX_IRQHandler,19)
 {
     /* In order to detect unexpected events during development,
        it is recommended to set a breakpoint on the following instruction.
     */
 		if(TIM2_GetITStatus(TIM2_IT_Update) == SET) {
-			//GPIO_WriteBit(GPIOE, GPIO_Pin_7, SET);
-			millis++;
+			GPIO_WriteBit(GPIOE, DEBUG_1_CHANNEL_PIN, SET);
+			millis = millis + 10;
 			TIM2_ClearITPendingBit(TIM2_IT_Update);
-			//GPIO_WriteBit(GPIOE, GPIO_Pin_7, RESET);
+			GPIO_WriteBit(GPIOE, DEBUG_1_CHANNEL_PIN, RESET);
+			IM_update();
 		} else {
 			GPIO_WriteBit(GPIOE, GPIO_Pin_5, SET);
 			while(1);
