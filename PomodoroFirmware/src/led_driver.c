@@ -70,18 +70,22 @@ void led_setBarProgress(uint16_t progress) // progress: 0 to 1500
 	led_sendPwmBuffer();
 }
 
+/**
+  * @brief  converts PWM values (uint16_ts ranged 0-4095 - located in led_pwmBuffer) into AS1122 register values
+  * @retval None
+  */
 //FIXME: this function is accessing memory outside led_buffer!!! (overwrites millis value)
 void led_sendPwmBuffer(void)
 {
 	uint8_t i;
-	return;
-	led_buffer[0] = 0xC2;
-	for(i = 0; i < (LED_PWM_CHANNELS/2 + 1); i++) {
-		// channels order is reversed: PWM11, PWM10, PWM9, ... , PWM0
-		uint8_t index1 = LED_PWM_CHANNELS - i*2 - 1;
-		uint8_t index2 = LED_PWM_CHANNELS - i*2 - 2;
-		uint8_t* led_buffer_address = led_buffer+1+3*i;
-		led_convert2ChannelsInto3Bytes(led_pwmBuffer[index1], led_pwmBuffer[index2], led_buffer_address);
+	//return;
+	led_buffer[0] = 0xC2; // PWM packet identifier
+	
+	for(i = 0; i < (LED_PWM_CHANNELS/2); i++) {
+		uint8_t index1 = i*2;
+		uint8_t index2 = i*2 + 1;
+		uint8_t* led_buffer_address = led_buffer + LED_PWM_BUFFER_SIZE - 3 * (i+1);
+		led_convert2ChannelsInto3Bytes(led_pwmBuffer[index2], led_pwmBuffer[index1], led_buffer_address); // lower PWM channels foes into higher addredd area
 	}
 	while(DMA_GetFlagStatus(DMA1_FLAG_BUSY2) == SET); // wait for previous DMA transfer to finish
 	DMA_Init(DMA1_Channel2, (uint32_t)led_buffer, (uint16_t)(&(SPI1->DR)), LED_PWM_BUFFER_SIZE, DMA_DIR_MemoryToPeripheral, DMA_Mode_Normal, DMA_MemoryIncMode_Inc, DMA_Priority_Low, DMA_MemoryDataSize_Byte);
@@ -98,19 +102,18 @@ void led_setModeLeds(uint16_t greenLedPwm, uint16_t redLedPwm)
 	led_sendPwmBuffer();
 }
 
-/*void led_test(void)
+void led_test(uint8_t channelNo)
 {
 	uint16_t i;
-	uint16_t pwmBuffer[LED_PWM_CHANNELS];
-	led_buffer[0] = 0xC2; // PWM identifier
 	for(i = 0; i < LED_PWM_CHANNELS; i++) {
-		pwmBuffer[i] = i*100;
+		if(i == channelNo) {
+			led_pwmBuffer[i] = PWM_MAX_VALUE;
+		} else {
+			led_pwmBuffer[i] = 0;
+		}
 	}
-	for(i = 0; i < (LED_PWM_CHANNELS/2); i++) {
-		led_convert2ChannelsInto3Bytes(pwmBuffer[i*2], pwmBuffer[i*2 + 1], (led_buffer+1+3*i));
-	}
-	DMA_Cmd(DMA1_Channel2, ENABLE);
-}*/
+	led_sendPwmBuffer();
+}
 
 /**
   * @brief  Converts 12-bit PWM values of two channels into 3 byte buffer
