@@ -13,6 +13,9 @@ volatile uint8_t toggledLedState = 0;
 
 void PM_performModeTransition(void);
 void PM_toggleModeLED(void);
+void PM_changeStateToRunning(void);
+void PM_changeStateToPaused(void);
+
 
 void PM_init(void)
 {
@@ -53,12 +56,19 @@ void PM_update(void)
 	led_setBarProgress(progress);
 }
 
+// called from button.c
 void PM_buttonShortPress(void)
 {
 	serialSendStringBlocking("PM short button press\n\r");
-	// TODO pause or resume
+	// TODO send short beep to the buzzer
+	if(PM_state == PM_STATE_PAUSED) {
+		PM_changeStateToRunning();
+	} else {
+		PM_changeStateToPaused();
+	}
 }
 
+// called from button.c
 void PM_buttonLongPress(void)
 {
 	serialSendStringBlocking("PM long button press\n\r");
@@ -72,7 +82,7 @@ void PM_performModeTransition(void)
 {
 	if(PM_mode == PM_MODE_WORK) { // transition WORK -> BREAK
 		//TODO send command to buzzer
-		led_setModeLeds(0xPWM_MAX_VALUE, 0); //turn off red mode LED, turn on green mode LED
+		led_setModeLeds(PWM_MAX_VALUE, 0); //turn off red mode LED, turn on green mode LED
 		counterSeconds = POMODORO_TIMER_BREAK_MODE_TIME_S;
 		serialSendStringBlocking("PM work->break\n\r");
 		PM_mode = PM_MODE_BREAK;
@@ -89,12 +99,27 @@ void PM_toggleModeLED(void)
 {
 	uint16_t redLedPwm = 0, greenLedPwm = 0;
 	if(PM_mode == PM_MODE_WORK) { // toggle red LED
-		redLedPwm = toggledLedState * 0x0FFF;
+		redLedPwm = toggledLedState * PWM_MAX_VALUE;
 	} else { // break mode, toggle green LED
-		greenLedPwm = toggledLedState * 0x0FFF;
+		greenLedPwm = toggledLedState * PWM_MAX_VALUE;
 	}
 	toggledLedState = !toggledLedState;
 	led_setModeLeds(greenLedPwm, redLedPwm);
 	//led_setModeLeds(0x0ABC, 0x0123);
+}
+
+void PM_changeStateToRunning(void)
+{
+	PM_state = PM_STATE_RUNNING;
+	if(PM_mode == PM_MODE_WORK) {
+		led_setModeLeds(0, PWM_MAX_VALUE);
+	} else {
+		led_setModeLeds(PWM_MAX_VALUE, 0);
+	}
+}
+
+void PM_changeStateToPaused(void)
+{
+	PM_state = PM_STATE_PAUSED;
 }
 
