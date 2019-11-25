@@ -59,37 +59,24 @@ void main(void)
 	GPIO_Init(GPIOE, DEBUG_1_CHANNEL_PIN, GPIO_Mode_Out_PP_Low_Slow);
 	GPIO_Init(GPIOE, DEBUG_2_CHANNEL_PIN, GPIO_Mode_Out_PP_Low_Slow);
 	GPIO_Init(GPIOE, DEBUG_3_CHANNEL_PIN, GPIO_Mode_Out_PP_Low_Slow);
-	//configTIM2();
+	configTIM2();
 	configUSART();
-	//configButton();
+	configButton();
 	led_initDriver();
-	//PM_init();
-	//led_setBarProgress(1500);
+	PM_init();
 	
   /* Infinite loop */
   while (1)
   {
-		//led_setBarProgress(progress);
-		/*for(i = 1; i < LED_PWM_CHANNELS; i++) {
-			led_pwmBuffer[i] = 0x0FFF;
-			led_pwmBuffer[i-1] = 0x0000;
-			led_sendPwmBuffer();
-			delay_ms(5000);
-		}
-		led_pwmBuffer[LED_PWM_CHANNELS-1] = 0x0000;
-		led_pwmBuffer[0] = 0x0FFF;
-		led_sendPwmBuffer();
-		delay_ms(5000);*/
-		led_test(i);
+		/*led_test(i);
 		i++;
 		if(i>=12) {
 			i = 0;
-		}
-		progress = (progress+10) % 1500;
+		}*/
 		GPIO_WriteBit(GPIOA, GREEN_LED_PIN, SET);
-		delay_ms(100);
+		delay_ms(1000);
 		GPIO_WriteBit(GPIOA, GREEN_LED_PIN, RESET);
-		delay_ms(100);
+		delay_ms(1000);
 		//log_timestamp();
 		//serialSendStringBlocking("\n\r");
   }

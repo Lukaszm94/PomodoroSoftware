@@ -17,7 +17,7 @@ void PM_toggleModeLED(void);
 void PM_init(void)
 {
 	led_setBarProgress(LED_BAR_PROGRESS_BAR_MAX_VALUE);
-	led_setModeLeds(0, 0xFFF);
+	led_setModeLeds(0, PWM_MAX_VALUE);
 	counterSeconds = 100;//POMODORO_TIMER_WORK_MODE_TIME_S;
 }
 
@@ -25,21 +25,21 @@ void PM_update(void)
 {
 	uint16_t progress = 0;
 	uint32_t tmp = 0;
-	//log_timestamp();
-	//serialSendStringBlocking("PM_update, counter= ");
-	//log_int(counterSeconds);
-	//serialSendStringBlocking("\n\r");
+	log_timestamp();
+	serialSendStringBlocking("PM_update, counter= ");
+	log_int(counterSeconds);
+	serialSendStringBlocking("\n\r");
 	if(PM_state == PM_STATE_PAUSED) {
 		GPIO_WriteBit(GPIOE, DEBUG_3_CHANNEL_PIN, SET);
 		PM_toggleModeLED();
 		GPIO_WriteBit(GPIOE, DEBUG_3_CHANNEL_PIN, RESET);
-		//serialSendStringBlocking("paused\n\r");
+		serialSendStringBlocking("paused\n\r");
 		return;
 	}
 	counterSeconds--;
 	
 	if(counterSeconds == 0) { // end of current mode
-		//serialSendStringBlocking("mode transition\n\r");
+		serialSendStringBlocking("mode transition\n\r");
 		PM_performModeTransition();
 	}
 	
@@ -56,11 +56,13 @@ void PM_update(void)
 void PM_buttonShortPress(void)
 {
 	serialSendStringBlocking("PM short button press\n\r");
+	// TODO pause or resume
 }
 
 void PM_buttonLongPress(void)
 {
 	serialSendStringBlocking("PM long button press\n\r");
+	// TODO reset to power-on state
 }
 
 
@@ -70,13 +72,13 @@ void PM_performModeTransition(void)
 {
 	if(PM_mode == PM_MODE_WORK) { // transition WORK -> BREAK
 		//TODO send command to buzzer
-		led_setModeLeds(0xFFF, 0); //turn off red mode LED, turn on green mode LED
+		led_setModeLeds(0xPWM_MAX_VALUE, 0); //turn off red mode LED, turn on green mode LED
 		counterSeconds = POMODORO_TIMER_BREAK_MODE_TIME_S;
 		serialSendStringBlocking("PM work->break\n\r");
 		PM_mode = PM_MODE_BREAK;
 	} else { // transition BREAK -> WORK
 		//TODO send command to buzzer
-		led_setModeLeds(0, 0xFFF); //turn off green mode LED, turn on red mode LED
+		led_setModeLeds(0, PWM_MAX_VALUE); //turn off green mode LED, turn on red mode LED
 		serialSendStringBlocking("PM break->work\n\r");
 		counterSeconds = POMODORO_TIMER_WORK_MODE_TIME_S;
 		PM_mode = PM_MODE_WORK;
