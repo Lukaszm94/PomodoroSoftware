@@ -22,6 +22,9 @@
 #define DEBUG_3_CHANNEL_PIN GPIO_Pin_4
 #define DEBUG_4_CHANNEL_PIN GPIO_Pin_5
 
+#define BUZZER_PORT GPIOB
+#define BUZZER_PIN GPIO_Pin_1
+
 #define BUTTON_PORT GPIOA
 #define BUTTON_PIN GPIO_Pin_2
 

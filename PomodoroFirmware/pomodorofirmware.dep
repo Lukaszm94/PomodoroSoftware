@@ -5,43 +5,46 @@ Keyword=ST7Project
 Number=1.3
 
 [Root.Source Files.src\button.c.Config.0]
-ExternDep= src\button.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\Hstm8\mods0.h"  inc\button.h inc\stm8l15x.h inc\stm8l15x_conf.h inc\stm8l15x_clk.h  inc\stm8l15x_gpio.h inc\stm8l15x_tim2.h inc\stm8l15x_usart.h inc\config.h  inc\pomodoro_timer.h
+ExternDep= src\button.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\HSTM8\mods0.h"  inc\button.h inc\stm8l15x.h inc\stm8l15x_conf.h inc\stm8l15x_clk.h  inc\stm8l15x_gpio.h inc\stm8l15x_tim2.h inc\stm8l15x_usart.h inc\config.h  inc\pomodoro_timer.h
 
 [Root.Source Files.src\interrupt_manager.c.Config.0]
-ExternDep= src\interrupt_manager.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\Hstm8\mods0.h"  inc\interrupt_manager.h inc\stm8l15x.h inc\stm8l15x_conf.h inc\stm8l15x_clk.h  inc\stm8l15x_gpio.h inc\stm8l15x_tim2.h inc\stm8l15x_usart.h  inc\pomodoro_timer.h inc\config.h inc\button.h
+ExternDep= src\interrupt_manager.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\HSTM8\mods0.h"  inc\interrupt_manager.h inc\stm8l15x.h inc\stm8l15x_conf.h inc\stm8l15x_clk.h  inc\stm8l15x_gpio.h inc\stm8l15x_tim2.h inc\stm8l15x_usart.h  inc\pomodoro_timer.h inc\config.h inc\button.h
 
 [Root.Source Files.src\led_driver.c.Config.0]
-ExternDep= src\led_driver.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\Hstm8\mods0.h"  inc\led_driver.h inc\stm8l15x.h inc\stm8l15x_conf.h inc\stm8l15x_clk.h  inc\stm8l15x_gpio.h inc\stm8l15x_tim2.h inc\stm8l15x_usart.h  inc\stm8l15x_spi.h inc\stm8l15x_dma.h inc\config.h
+ExternDep= src\led_driver.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\HSTM8\mods0.h"  inc\led_driver.h inc\stm8l15x.h inc\stm8l15x_conf.h inc\stm8l15x_clk.h  inc\stm8l15x_gpio.h inc\stm8l15x_tim2.h inc\stm8l15x_usart.h  inc\stm8l15x_spi.h inc\stm8l15x_dma.h inc\config.h
 
 [Root.Source Files.src\main.c.Config.0]
-ExternDep= src\main.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\Hstm8\mods0.h"  inc\stm8l15x.h inc\stm8l15x_conf.h inc\stm8l15x_clk.h inc\stm8l15x_gpio.h  inc\stm8l15x_tim2.h inc\stm8l15x_usart.h inc\led_driver.h  inc\interrupt_manager.h inc\pomodoro_timer.h inc\config.h inc\misc.h  inc\button.h
+ExternDep= src\main.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\HSTM8\mods0.h"  inc\stm8l15x.h inc\stm8l15x_conf.h inc\stm8l15x_clk.h inc\stm8l15x_gpio.h  inc\stm8l15x_tim2.h inc\stm8l15x_usart.h inc\led_driver.h  inc\interrupt_manager.h inc\pomodoro_timer.h inc\config.h inc\misc.h  inc\button.h inc\stm8l15x_tim3.h
 
 [Root.Source Files.src\misc.c.Config.0]
-ExternDep= src\misc.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\Hstm8\mods0.h" inc\misc.h  inc\stm8l15x.h inc\stm8l15x_conf.h inc\stm8l15x_clk.h inc\stm8l15x_gpio.h  inc\stm8l15x_tim2.h inc\stm8l15x_usart.h inc\config.h  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\Hstm8\string.h"
+ExternDep= src\misc.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\HSTM8\mods0.h" inc\misc.h  inc\stm8l15x.h inc\stm8l15x_conf.h inc\stm8l15x_clk.h inc\stm8l15x_gpio.h  inc\stm8l15x_tim2.h inc\stm8l15x_usart.h inc\config.h  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\HSTM8\string.h"
 
 [Root.Source Files.src\pomodoro_timer.c.Config.0]
-ExternDep= src\pomodoro_timer.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\Hstm8\mods0.h"  inc\pomodoro_timer.h inc\config.h inc\stm8l15x.h inc\stm8l15x_conf.h  inc\stm8l15x_clk.h inc\stm8l15x_gpio.h inc\stm8l15x_tim2.h  inc\stm8l15x_usart.h inc\led_driver.h inc\misc.h
+ExternDep= src\pomodoro_timer.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\HSTM8\mods0.h"  inc\pomodoro_timer.h inc\config.h inc\stm8l15x.h inc\stm8l15x_conf.h  inc\stm8l15x_clk.h inc\stm8l15x_gpio.h inc\stm8l15x_tim2.h  inc\stm8l15x_usart.h inc\led_driver.h inc\misc.h
 
 [Root.Source Files.src\stm8_interrupt_vector.c.Config.0]
-ExternDep= src\stm8_interrupt_vector.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\Hstm8\mods0.h"  inc\stm8l15x_it.h inc\stm8l15x.h inc\stm8l15x_conf.h inc\stm8l15x_clk.h  inc\stm8l15x_gpio.h inc\stm8l15x_tim2.h inc\stm8l15x_usart.h
+ExternDep= src\stm8_interrupt_vector.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\HSTM8\mods0.h"  inc\stm8l15x_it.h inc\stm8l15x.h inc\stm8l15x_conf.h inc\stm8l15x_clk.h  inc\stm8l15x_gpio.h inc\stm8l15x_tim2.h inc\stm8l15x_usart.h
 
 [Root.Source Files.src\stm8l15x_clk.c.Config.0]
-ExternDep= src\stm8l15x_clk.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\Hstm8\mods0.h"  inc\stm8l15x_clk.h inc\stm8l15x.h inc\stm8l15x_conf.h inc\stm8l15x_gpio.h  inc\stm8l15x_tim2.h inc\stm8l15x_usart.h
+ExternDep= src\stm8l15x_clk.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\HSTM8\mods0.h"  inc\stm8l15x_clk.h inc\stm8l15x.h inc\stm8l15x_conf.h inc\stm8l15x_gpio.h  inc\stm8l15x_tim2.h inc\stm8l15x_usart.h
 
 [Root.Source Files.src\stm8l15x_dma.c.Config.0]
-ExternDep= src\stm8l15x_dma.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\Hstm8\mods0.h"  inc\stm8l15x_dma.h inc\stm8l15x.h inc\stm8l15x_conf.h inc\stm8l15x_clk.h  inc\stm8l15x_gpio.h inc\stm8l15x_tim2.h inc\stm8l15x_usart.h
+ExternDep= src\stm8l15x_dma.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\HSTM8\mods0.h"  inc\stm8l15x_dma.h inc\stm8l15x.h inc\stm8l15x_conf.h inc\stm8l15x_clk.h  inc\stm8l15x_gpio.h inc\stm8l15x_tim2.h inc\stm8l15x_usart.h
 
 [Root.Source Files.src\stm8l15x_gpio.c.Config.0]
-ExternDep= src\stm8l15x_gpio.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\Hstm8\mods0.h"  inc\stm8l15x_gpio.h inc\stm8l15x.h inc\stm8l15x_conf.h inc\stm8l15x_clk.h  inc\stm8l15x_tim2.h inc\stm8l15x_usart.h
+ExternDep= src\stm8l15x_gpio.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\HSTM8\mods0.h"  inc\stm8l15x_gpio.h inc\stm8l15x.h inc\stm8l15x_conf.h inc\stm8l15x_clk.h  inc\stm8l15x_tim2.h inc\stm8l15x_usart.h
 
 [Root.Source Files.src\stm8l15x_it.c.Config.0]
-ExternDep= src\stm8l15x_it.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\Hstm8\mods0.h"  inc\stm8l15x.h inc\stm8l15x_conf.h inc\stm8l15x_clk.h inc\stm8l15x_gpio.h  inc\stm8l15x_tim2.h inc\stm8l15x_usart.h inc\config.h inc\interrupt_manager.h
+ExternDep= src\stm8l15x_it.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\HSTM8\mods0.h"  inc\stm8l15x.h inc\stm8l15x_conf.h inc\stm8l15x_clk.h inc\stm8l15x_gpio.h  inc\stm8l15x_tim2.h inc\stm8l15x_usart.h inc\config.h inc\interrupt_manager.h
 
 [Root.Source Files.src\stm8l15x_spi.c.Config.0]
-ExternDep= src\stm8l15x_spi.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\Hstm8\mods0.h"  inc\stm8l15x_spi.h inc\stm8l15x.h inc\stm8l15x_conf.h inc\stm8l15x_clk.h  inc\stm8l15x_gpio.h inc\stm8l15x_tim2.h inc\stm8l15x_usart.h
+ExternDep= src\stm8l15x_spi.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\HSTM8\mods0.h"  inc\stm8l15x_spi.h inc\stm8l15x.h inc\stm8l15x_conf.h inc\stm8l15x_clk.h  inc\stm8l15x_gpio.h inc\stm8l15x_tim2.h inc\stm8l15x_usart.h
 
 [Root.Source Files.src\stm8l15x_tim2.c.Config.0]
-ExternDep= src\stm8l15x_tim2.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\Hstm8\mods0.h"  inc\stm8l15x_TIM2.h inc\stm8l15x.h inc\stm8l15x_conf.h inc\stm8l15x_clk.h  inc\stm8l15x_gpio.h inc\stm8l15x_tim2.h inc\stm8l15x_usart.h
+ExternDep= src\stm8l15x_tim2.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\HSTM8\mods0.h"  inc\stm8l15x_TIM2.h inc\stm8l15x.h inc\stm8l15x_conf.h inc\stm8l15x_clk.h  inc\stm8l15x_gpio.h inc\stm8l15x_tim2.h inc\stm8l15x_usart.h
+
+[Root.Source Files.src\stm8l15x_tim3.c.Config.0]
+ExternDep= src\stm8l15x_tim3.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\HSTM8\mods0.h"  inc\stm8l15x_TIM3.h inc\stm8l15x.h inc\stm8l15x_conf.h inc\stm8l15x_clk.h  inc\stm8l15x_gpio.h inc\stm8l15x_tim2.h inc\stm8l15x_usart.h
 
 [Root.Source Files.src\stm8l15x_usart.c.Config.0]
-ExternDep= src\stm8l15x_usart.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\Hstm8\mods0.h"  inc\stm8l15x_usart.h inc\stm8l15x.h inc\stm8l15x_conf.h inc\stm8l15x_clk.h  inc\stm8l15x_gpio.h inc\stm8l15x_tim2.h
+ExternDep= src\stm8l15x_usart.c  "C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\HSTM8\mods0.h"  inc\stm8l15x_usart.h inc\stm8l15x.h inc\stm8l15x_conf.h inc\stm8l15x_clk.h  inc\stm8l15x_gpio.h inc\stm8l15x_tim2.h

@@ -6,6 +6,7 @@
 #include "config.h"
 #include "misc.h"
 #include "button.h"
+#include "stm8l15x_tim3.h"
 
 /** @addtogroup STM8L15x_StdPeriph_Template
   * @{
@@ -44,6 +45,18 @@ void configTIM2(void) // 1ms timer
 	enableInterrupts(); // global interrupts enable
 }
 
+void configTIM3(void) // buzzer PWM timer
+{
+	CLK_PeripheralClockConfig(CLK_Peripheral_TIM3, ENABLE);
+	TIM3_TimeBaseInit(TIM3_Prescaler_16, TIM3_CounterMode_Up, 1000);
+	TIM3_OC1Init(TIM3_OCMode_Inactive, TIM3_OutputState_Enable, 100, TIM3_OCPolarity_High, TIM3_OCIdleState_Set);
+	TIM3_OC1PreloadConfig(DISABLE);
+	TIM3_ARRPreloadConfig(ENABLE);
+	TIM3_CtrlPWMOutputs(ENABLE);
+	
+	TIM3_Cmd(ENABLE);
+}
+
 /**
   * @brief  Main program.
   * @param  None
@@ -59,7 +72,9 @@ void main(void)
 	GPIO_Init(GPIOE, DEBUG_1_CHANNEL_PIN, GPIO_Mode_Out_PP_Low_Slow);
 	GPIO_Init(GPIOE, DEBUG_2_CHANNEL_PIN, GPIO_Mode_Out_PP_Low_Slow);
 	GPIO_Init(GPIOE, DEBUG_3_CHANNEL_PIN, GPIO_Mode_Out_PP_Low_Slow);
+	GPIO_Init(BUZZER_PORT, BUZZER_PIN, GPIO_Mode_Out_PP_Low_Slow);
 	configTIM2();
+	configTIM3();
 	configUSART();
 	configButton();
 	led_initDriver();

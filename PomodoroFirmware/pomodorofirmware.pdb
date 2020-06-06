@@ -3,8 +3,8 @@ DumpRWOnFly1=0
 DumpRWOnFly2=0
 DumpRWOnFly3=0
 DumpRWOnFly4=0
-WatchVariables1=toggledLedState!1;led_buffer!1;led_buffer[10]!1;led_buffer[11]!1;led_buffer[12]!1;led_pwmBuffer!1;millis!0;led_buffer[18]!1;
-FormatWatch1=1
+WatchVariables1=toggledLedState!1;led_buffer!1;led_buffer[10]!1;led_buffer[11]!1;led_buffer[12]!1;led_pwmBuffer!1;millis!0;led_buffer[18]!1;counterSeconds!0;
+FormatWatch1=0
 FormatViewType1=1
 FormatViewAddress1=1
 WatchRWOnFlyTab1=0
@@ -32,7 +32,7 @@ DisplayFormat=1
 ShowPeriphAddress=0
 ShowRegisterAddress=1
 [DebugState_v1-Debug.AddOn.St7McuIcdConf]
-McuName=STM8L151C2
+McuName=STM8L151C3
 [DebugState_v1-Debug.AddOn.IcdBreak]
 ICDBreak0=CR:0x00000000,BK1:0x00000000,BK2:0x00000000
 [DebugState_v1-Debug.AddOn.SteppingMode]
