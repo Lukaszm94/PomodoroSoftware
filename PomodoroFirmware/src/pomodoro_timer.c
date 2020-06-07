@@ -3,11 +3,12 @@
 #include "stm8l15x.h"
 #include "led_driver.h"
 #include "misc.h"
+#include "buzzer.h"
 
 enum {PM_STATE_RUNNING, PM_STATE_PAUSED, PM_MODE_WORK, PM_MODE_BREAK};
 
 volatile uint16_t counterSeconds;
-volatile uint8_t PM_state = PM_STATE_RUNNING;
+volatile uint8_t PM_state = PM_STATE_PAUSED;
 volatile uint8_t PM_mode = PM_MODE_WORK;
 volatile uint8_t toggledLedState = 0;
 
@@ -60,7 +61,7 @@ void PM_update(void)
 void PM_buttonShortPress(void)
 {
 	serialSendStringBlocking("PM short button press\n\r");
-	// TODO send short beep to the buzzer
+	buzzer_addBeepSimple(SHORT_BEEP_DURATION);
 	if(PM_state == PM_STATE_PAUSED) {
 		PM_changeStateToRunning();
 	} else {
@@ -72,7 +73,13 @@ void PM_buttonShortPress(void)
 void PM_buttonLongPress(void)
 {
 	serialSendStringBlocking("PM long button press\n\r");
-	// TODO reset to power-on state
+	buzzer_addBeepSimple(MEDIUM_BEEP_DURATION);
+	// reset to power-on state
+	PM_state = PM_STATE_PAUSED;
+	PM_mode = PM_MODE_WORK;
+	led_setBarProgress(LED_BAR_PROGRESS_BAR_MAX_VALUE);
+	led_setModeLeds(0, PWM_MAX_VALUE);
+	counterSeconds = POMODORO_TIMER_WORK_MODE_TIME_S;
 }
 
 
@@ -81,13 +88,15 @@ void PM_buttonLongPress(void)
 void PM_performModeTransition(void)
 {
 	if(PM_mode == PM_MODE_WORK) { // transition WORK -> BREAK
-		//TODO send command to buzzer
+		buzzer_addBeepSimple(MEDIUM_BEEP_DURATION);
+		buzzer_addBeepSimple(MEDIUM_BEEP_DURATION);
+		buzzer_addBeepSimple(LONG_BEEP_DURATION);
 		led_setModeLeds(PWM_MAX_VALUE, 0); //turn off red mode LED, turn on green mode LED
 		counterSeconds = POMODORO_TIMER_BREAK_MODE_TIME_S;
 		serialSendStringBlocking("PM work->break\n\r");
 		PM_mode = PM_MODE_BREAK;
 	} else { // transition BREAK -> WORK
-		//TODO send command to buzzer
+		buzzer_addBeepSimple(LONG_BEEP_DURATION);
 		led_setModeLeds(0, PWM_MAX_VALUE); //turn off green mode LED, turn on red mode LED
 		serialSendStringBlocking("PM break->work\n\r");
 		counterSeconds = POMODORO_TIMER_WORK_MODE_TIME_S;
@@ -120,6 +129,7 @@ void PM_changeStateToRunning(void)
 
 void PM_changeStateToPaused(void)
 {
+	led_setModeLeds(0, 0);
 	PM_state = PM_STATE_PAUSED;
 }
 

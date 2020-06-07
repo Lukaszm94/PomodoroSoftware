@@ -3,7 +3,7 @@
 #include "stm8l15x.h"
 
 void configUSART(void);
-
+uint32_t getMillis(void);
 void log_timestamp(void);
 void log_int(int n);
 void log_u32(uint32_t n);

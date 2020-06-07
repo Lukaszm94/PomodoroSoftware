@@ -3,6 +3,7 @@
 #include "pomodoro_timer.h"
 #include "config.h"
 #include "button.h"
+#include "buzzer.h"
 
 //extern volatile PomodoroTimer pomodoroTimer;
 
@@ -23,6 +24,7 @@ void IM_update(void)
 		GPIO_WriteBit(GPIOE, DEBUG_2_CHANNEL_PIN, RESET);
 	}
 	buttonUpdate();
+	buzzer_update();
 	/*if(buttonCounter == pomodoroTimer.button1.updateIntervalMs * 8U) {
 		resetCounter(&buttonCounter);
 		//pomodoroTimer.button1.update();

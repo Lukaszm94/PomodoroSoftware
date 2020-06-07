@@ -11,6 +11,16 @@ void configUSART(void)
 	USART_Cmd(USART1, ENABLE);
 }
 
+// call only from non-ISR code
+uint32_t getMillis(void)
+{
+	uint32_t millisLocal = millis;
+	disableInterrupts();
+	millisLocal = millis;
+	enableInterrupts();
+	return millisLocal;
+}
+
 void log_timestamp(void)
 {
 	serialSendStringBlocking("[");
