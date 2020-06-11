@@ -64,6 +64,7 @@ void main(void)
 	configTIM2();
 	configUSART();
 	configButton();
+	configADC();
 	led_initDriver();
 	buzzer_init();
 	PM_init();

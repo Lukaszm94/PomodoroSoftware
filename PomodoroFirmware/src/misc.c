@@ -1,5 +1,6 @@
 #include "misc.h"
 #include "config.h"
+#include "stm8l15x_adc.h"
 #include <string.h>
 
 extern volatile uint32_t millis;
@@ -9,6 +10,37 @@ void configUSART(void)
 	CLK_PeripheralClockConfig(CLK_Peripheral_USART1, ENABLE);
 	USART_Init(USART1, UART_BAUDRATE, USART_WordLength_8b, USART_StopBits_1, USART_Parity_No, USART_Mode_Tx);
 	USART_Cmd(USART1, ENABLE);
+}
+
+void configADC(void)
+{
+	CLK_PeripheralClockConfig(CLK_Peripheral_ADC1, ENABLE);
+	ADC_Init(ADC1, ADC_ConversionMode_Single, ADC_Resolution_12Bit, ADC_Prescaler_2);
+	ADC_Cmd(ADC1, ENABLE);
+	ADC_ChannelCmd(ADC1, ADC_Channel_0, ENABLE);
+	//ADC_ITConfig(ADC1, ADC_IT_EOC, ENABLE);
+	
+}
+
+uint16_t readADCBlocking(void)
+{
+	uint32_t timeout = 0;
+	ADC_SoftwareStartConv(ADC1);
+	timeout = getMillis() + 10;
+	while(ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC) == RESET) {
+		if(getMillis() > timeout) {
+			serialSendStringBlocking("ADC TIMEOUT\n\r");
+			return 0;
+		}
+	}
+	return ADC_GetConversionValue(ADC1);
+}
+
+uint16_t readBatteryVoltage(void)
+{
+	uint32_t adcVoltage = (readADCBlocking() * (uint32_t)VCC_VOLTAGE_MV) / 4096; // [mV]
+	uint16_t batteryVoltage = (BAT_DIV_R1 + BAT_DIV_R2) * adcVoltage / BAT_DIV_R2;
+	return batteryVoltage;
 }
 
 // call only from non-ISR code

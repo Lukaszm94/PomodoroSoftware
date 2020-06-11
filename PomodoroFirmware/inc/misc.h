@@ -3,6 +3,9 @@
 #include "stm8l15x.h"
 
 void configUSART(void);
+void configADC(void);
+uint16_t readADCBlocking(void);
+uint16_t readBatteryVoltage(void); // [mV]
 uint32_t getMillis(void);
 void log_timestamp(void);
 void log_int(int n);

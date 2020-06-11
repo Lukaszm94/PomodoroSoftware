@@ -10,29 +10,47 @@ enum {PM_STATE_RUNNING, PM_STATE_PAUSED, PM_MODE_WORK, PM_MODE_BREAK};
 volatile uint16_t counterSeconds;
 volatile uint8_t PM_state = PM_STATE_PAUSED;
 volatile uint8_t PM_mode = PM_MODE_WORK;
-volatile uint8_t toggledLedState = 0;
+volatile uint8_t toggledLedState = 0;\
+uint32_t pm_showingBatteryStatusTimeout = 0;
 
 void PM_performModeTransition(void);
 void PM_toggleModeLED(void);
 void PM_changeStateToRunning(void);
 void PM_changeStateToPaused(void);
+void PM_displayBatteryStatus(void);
 
 
 void PM_init(void)
 {
-	led_setBarProgress(LED_BAR_PROGRESS_BAR_MAX_VALUE);
+	PM_displayBatteryStatus();
+	//led_setBarProgress(LED_BAR_PROGRESS_BAR_MAX_VALUE);
 	led_setModeLeds(0, PWM_MAX_VALUE);
-	counterSeconds = 100;//POMODORO_TIMER_WORK_MODE_TIME_S;
+	counterSeconds = POMODORO_TIMER_WORK_MODE_TIME_S;
 }
 
 void PM_update(void)
 {
 	uint16_t progress = 0;
 	uint32_t tmp = 0;
+	uint16_t batteryVoltage = readBatteryVoltage();
 	log_timestamp();
 	serialSendStringBlocking("PM_update, counter= ");
 	log_int(counterSeconds);
+	serialSendStringBlocking(", BATT [mV]: ");
+	log_int(batteryVoltage);
 	serialSendStringBlocking("\n\r");
+	
+	// update LED bar
+	progress = counterSeconds;
+	if(PM_mode == PM_MODE_BREAK) {
+		//serialSendStringBlocking("break mode, calculate progress\n\r");
+		progress = counterSeconds * POMODORO_TIMER_BREAK_TIME_TO_PROGRESS;
+	}
+	//serialSendStringBlocking("update progress\n\r");
+	if(getMillis() > pm_showingBatteryStatusTimeout) {
+		led_setBarProgress(progress);
+	}
+	
 	if(PM_state == PM_STATE_PAUSED) {
 		GPIO_WriteBit(GPIOE, DEBUG_3_CHANNEL_PIN, SET);
 		PM_toggleModeLED();
@@ -46,15 +64,6 @@ void PM_update(void)
 		serialSendStringBlocking("mode transition\n\r");
 		PM_performModeTransition();
 	}
-	
-	// update LED bar
-	progress = counterSeconds;
-	if(PM_mode == PM_MODE_BREAK) {
-		//serialSendStringBlocking("break mode, calculate progress\n\r");
-		progress = counterSeconds * POMODORO_TIMER_BREAK_TIME_TO_PROGRESS;
-	}
-	//serialSendStringBlocking("update progress\n\r");
-	led_setBarProgress(progress);
 }
 
 // called from button.c
@@ -77,7 +86,8 @@ void PM_buttonLongPress(void)
 	// reset to power-on state
 	PM_state = PM_STATE_PAUSED;
 	PM_mode = PM_MODE_WORK;
-	led_setBarProgress(LED_BAR_PROGRESS_BAR_MAX_VALUE);
+	//led_setBarProgress(LED_BAR_PROGRESS_BAR_MAX_VALUE);
+	PM_displayBatteryStatus();
 	led_setModeLeds(0, PWM_MAX_VALUE);
 	counterSeconds = POMODORO_TIMER_WORK_MODE_TIME_S;
 }
@@ -133,3 +143,17 @@ void PM_changeStateToPaused(void)
 	PM_state = PM_STATE_PAUSED;
 }
 
+void PM_displayBatteryStatus(void)
+{
+	uint16_t batteryVoltage = readBatteryVoltage();
+	uint16_t batteryCharge = 0;
+	if(batteryVoltage > BATTERY_VOLTAGE_MAX) {
+		batteryCharge = LED_BAR_PROGRESS_BAR_MAX_VALUE;
+	} else if(batteryVoltage < BATTERY_VOLTAGE_MIN) {
+		batteryCharge = 0;
+	} else {
+		batteryCharge = ((uint32_t)(batteryVoltage - BATTERY_VOLTAGE_MIN) * LED_BAR_PROGRESS_BAR_MAX_VALUE) / (BATTERY_VOLTAGE_MAX - BATTERY_VOLTAGE_MIN);
+	}
+	led_setBarProgress(batteryCharge);
+	pm_showingBatteryStatusTimeout = getMillis() + SHOW_BATTERY_STATUS_TIME_MS;
+}
